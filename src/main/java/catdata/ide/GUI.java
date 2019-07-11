@@ -804,39 +804,39 @@ public class GUI extends JPanel {
 
 	}
 
-	private static FileDialog openDialog;
+	private static FileDialog openSaveDialog;
 
 	private static FileDialog getOpenDialog() {
-		if (openDialog != null) {
-			openDialog.setFile(AllNameFilter.getAllString());
-			return openDialog;
+		if (openSaveDialog == null) {
+			openSaveDialog = new FileDialog((Dialog) null);							
 		}
-		openDialog = new FileDialog((Dialog) null, "Open", FileDialog.LOAD);
-		openDialog.setFile(AllNameFilter.getAllString());
-		openDialog.setFilenameFilter(new AllNameFilter());
-		// if (!GlobalOptions.debug.general.file_path.isEmpty()) {
-		openDialog.setDirectory(IdeOptions.theCurrentOptions.getFile(IdeOption.FILE_PATH).getAbsolutePath());
-		// }
-		openDialog.setMultipleMode(true);
-		return openDialog;
-	}
 
-	private static FileDialog saveDialog;
+		if (openSaveDialog.getDirectory() == null) {
+			openSaveDialog.setDirectory(IdeOptions.theCurrentOptions.getFile(IdeOption.FILE_PATH).getAbsolutePath());
+		}
+		
+		openSaveDialog.setTitle("Open");
+		openSaveDialog.setMode(FileDialog.LOAD);
+		openSaveDialog.setFilenameFilter(new AllNameFilter());
+		openSaveDialog.setMultipleMode(true);
+		openSaveDialog.setFile(AllNameFilter.getAllString());
+		
+		return openSaveDialog;
+	}	
 
 	private static FileDialog getSaveDialog(Language lang) {
-		if (saveDialog != null) {
-			saveDialog.setFile("*." + lang.fileExtension());
-			return saveDialog;
+		if (openSaveDialog == null) {
+			openSaveDialog = new FileDialog((Dialog) null);			
 		}
-		saveDialog = new FileDialog((Dialog) null, "Save", FileDialog.SAVE);
-		saveDialog.setFile("*." + lang.fileExtension());
+		if (openSaveDialog.getDirectory() == null) {
+			openSaveDialog.setDirectory(IdeOptions.theCurrentOptions.getFile(IdeOption.FILE_PATH).getAbsolutePath());
+		}
+		openSaveDialog.setTitle("Save");
+		openSaveDialog.setMode(FileDialog.SAVE);
+		openSaveDialog.setMultipleMode(false);
+		openSaveDialog.setFile("*." + lang.fileExtension());
 		
-		// openDialog.setFilenameFilter(new AllNameFilter());
-		// if (!GlobalOptions.debug.general.file_path.isEmpty()) {
-		saveDialog.setDirectory(IdeOptions.theCurrentOptions.getFile(IdeOption.FILE_PATH).getAbsolutePath());
-		// }
-		saveDialog.setMultipleMode(false);
-		return saveDialog;
+		return openSaveDialog;
 	}
 
 	public static void openAction(File... fs0) {
